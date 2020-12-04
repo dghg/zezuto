@@ -2,7 +2,8 @@ import React, { useState } from 'react';
 import { useCookies } from 'react-cookie';
 import { Redirect } from 'react-router-dom';
 import { Button, Input } from '@material-ui/core';
-const Login: React.FunctionComponent = ({}) => {
+
+const Login: React.FunctionComponent = () => {
   const [name, setName] = useState<string>('');
   const [cookies, setCookie] = useCookies(['name']);
   const handleChange = (e: any) => {
@@ -11,10 +12,10 @@ const Login: React.FunctionComponent = ({}) => {
   const handleSubmit = (e: any) => {
     e.preventDefault();
     setCookie('name', name);
-    e.target.value = '';
+    e.target.value = '';  
   };
   return (
-    cookies.name 
+    cookies.name // Redirect to main if user exists.
     ? <Redirect to="/main" /> 
     : 
     <>

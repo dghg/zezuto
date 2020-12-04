@@ -1,6 +1,6 @@
 import React, { useEffect } from 'react';
 import styled from 'styled-components';
-import { Place } from '../types';
+import { Place } from '../util/types';
 
 const Map = styled.div`
   width: 100%;
