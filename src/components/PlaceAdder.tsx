@@ -33,21 +33,17 @@ const PlaceAdder: React.FunctionComponent<Props> = ({places, setSelectInfo}) => 
             writer: cookies.name as string,
           } as Place// make into array 
         });
-        if(_.length) {
-          setResults(_);
-        }
-        else {
-          setSelectInfo(null);
-        }
-      }
-      else {
-        setSelectInfo(null);
+        console.log(_);
+        setResults(_);
       }
     });
   }
   
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     setValue(e.target.value);
+    if(e.target.value.length > 2) {
+      searchPlaces(value);
+    }
   }
   const handleSubmit = async (e: React.MouseEvent<HTMLFormElement>) => {
     e.preventDefault();
