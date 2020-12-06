@@ -1,9 +1,10 @@
-import React, { useEffect, useState } from 'react';
+import React, { useState } from 'react';
 import { useCookies } from 'react-cookie';
 import Result from './Result';
 import { Button, Input } from '@material-ui/core';
-
 import { Place } from '../util/types';
+import { checkDistance } from '../util/f';
+
 const { kakao } = window;
 interface Props {
   places: Place[];
@@ -16,7 +17,6 @@ const PlaceAdder: React.FunctionComponent<Props> = ({places, setSelectInfo}) => 
   const [cookies] = useCookies();
   
   
-// todo : searchPlaces 이후 setS로 넘긴다음 setMethod로 초기화 해줘야함. >> 옆 cmp도 마찬가지
   const searchPlaces = async (keyword: string) => {
     setValue('');
     var ps = new kakao.maps.services.Places(); // Create service 
@@ -24,7 +24,8 @@ const PlaceAdder: React.FunctionComponent<Props> = ({places, setSelectInfo}) => 
     // TODO : filtering using distance between standard and data 
     ps.keywordSearch(keyword, (data: Array<any>, status: any, pagination: any) => {
       if(status === kakao.maps.services.Status.OK && data.length) {
-        const _ = data.map((val,idx) => {
+        const inRangePlaces = data.filter(checkDistance);
+        const _ = inRangePlaces.map((val,idx) => {
           return { 
             x: parseFloat(parseFloat(val.y).toFixed(4)),
             y: parseFloat(parseFloat(val.x).toFixed(4)),
@@ -32,10 +33,15 @@ const PlaceAdder: React.FunctionComponent<Props> = ({places, setSelectInfo}) => 
             writer: cookies.name as string,
           } as Place// make into array 
         });
-        setResults(_);
+        if(_.length) {
+          setResults(_);
+        }
+        else {
+          setSelectInfo(null);
+        }
       }
       else {
-        //TODO: what to do if data fetching is failed ? 
+        setSelectInfo(null);
       }
     });
   }

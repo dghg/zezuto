@@ -7,7 +7,7 @@ import PlaceRemover from '../components/PlaceRemover';
 import { Redirect } from 'react-router-dom';
 import {Place} from '../util/types';
 import {useCookies} from 'react-cookie';
-
+import {API_URL} from '../util/constants';
 interface SelectInfo {
   place: Place;
   method: "add" | "remove";
@@ -21,7 +21,6 @@ const App_: React.FunctionComponent = () => {
   const [cookies] = useCookies();
 
   const setPlace = async (info: SelectInfo) => {
-    const url = "https://fbqzahyhhg.execute-api.us-east-1.amazonaws.com/dev/postData";
     let data;
     if(info.method === "add") {
       data = JSON.stringify([...places, info.place]);
@@ -31,7 +30,7 @@ const App_: React.FunctionComponent = () => {
       data = places;
     }
     
-    const result = await axios.post(url, data);
+    const result = await axios.post(API_URL, data);
     if(result.status === 200) {
       setPlaces(result.data); // 통채로 교체
       setMethod(null);
@@ -48,12 +47,15 @@ const App_: React.FunctionComponent = () => {
       })();
       setSelectInfo(null);
     }
+    else {
+      setMethod(null);
+    }
   }, [selectInfo]);
 
   useEffect(() => { // Initial Loading
     setLoading(true);
     (async () => {  
-      const result = await axios.get("https://fbqzahyhhg.execute-api.us-east-1.amazonaws.com/dev/getData");
+      const result = await axios.get(API_URL);
       if(result.status === 200) {
         setPlaces(result.data);
         setLoading(false);
@@ -66,7 +68,7 @@ const App_: React.FunctionComponent = () => {
     cookies.name ?
     <>
       {loading ? <div>지도를 불러오는 중입니다.</div>:<Map places={places}/>}
-      {method === null ? <><h1>가고 싶은 곳</h1><Button onClick={()=>{setMethod("add")}}>추가</Button><Button onClick={()=>{setMethod("remove")}}>삭제</Button></>: null}
+      {method === null ? <><h1>선택해 주세요.</h1><Button onClick={()=>{setMethod("add")}}>추가</Button> {filtered.length ? <Button onClick={()=>{setMethod("remove")}}>삭제</Button> : null }</>: null}
       {method === "add" ? <PlaceAdder places={places} setSelectInfo={setSelectInfo}/> : null}
       {method === "remove" ? <PlaceRemover places={filtered} setSelectInfo={setSelectInfo}/> : null}
     </>
