@@ -47,9 +47,6 @@ const App_: React.FunctionComponent = () => {
       })();
       setSelectInfo(null);
     }
-    else {
-      setMethod(null);
-    }
   }, [selectInfo]);
 
   useEffect(() => { // Initial Loading
