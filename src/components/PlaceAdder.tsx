@@ -15,7 +15,7 @@ const PlaceAdder: React.FunctionComponent<Props> = ({places, setSelectInfo}) => 
   const [value, setValue] = useState<string>(''); // Form value
   const [results, setResults] = useState<Array<any> | "FAIL">([]); // search result value
   const [cookies] = useCookies();
-  const [isSearching, setIsSearching] = useState<boolean | null>(null);
+  const [isSearching, setIsSearching] = useState<boolean>(false);
   const searchPlaces = async (keyword: string) => {
     setValue('');
     var ps = new kakao.maps.services.Places(); // Create service 
@@ -41,6 +41,9 @@ const PlaceAdder: React.FunctionComponent<Props> = ({places, setSelectInfo}) => 
           setResults("FAIL");
         }
         setIsSearching(false);
+      }
+      else { // fail to search 
+        setResults("FAIL");
       }
     });
   }
