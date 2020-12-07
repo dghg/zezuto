@@ -62,7 +62,7 @@ const PlaceAdder: React.FunctionComponent<Props> = ({places, setSelectInfo}) => 
     <h1>{results.length && results !== "FAIL" ? "원하는 장소를 누르면 추가됩니다." : "가고 싶은 곳을 검색해 보세요."}</h1>
     <form onSubmit={handleSubmit}>
       <Input onChange={handleChange} />
-      <Button>검색</Button>
+      <Button type="submit">검색</Button>
     </form>
     {isSearching ? <h1>검색 중입니다.</h1> : results === "FAIL" ? <h1>결과가 존재하지 않습니다. 다시 검색해 주세요.</h1> : <Result places={results} setSelectInfo={setSelectInfo} method="add"/>}
   </>
