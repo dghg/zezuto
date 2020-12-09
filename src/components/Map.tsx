@@ -24,4 +24,4 @@ const MapContainer: React.FunctionComponent<Props> = ({places}) => {
   )
 };
 
-export default MapContainer;
+export default React.memo(MapContainer);
