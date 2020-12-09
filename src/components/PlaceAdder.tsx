@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import React, { useCallback, useState } from 'react';
 import { useCookies } from 'react-cookie';
 import Result from './Result';
 import { Button, Input } from '@material-ui/core';
@@ -16,8 +16,8 @@ const PlaceAdder: React.FunctionComponent<Props> = ({places, setSelectInfo}) => 
   const [results, setResults] = useState<Array<any> | "FAIL">([]); // search result value
   const [cookies] = useCookies();
   const [isSearching, setIsSearching] = useState<boolean>(false);
-  const searchPlaces = async (keyword: string) => {
-    setValue('');
+  const searchPlaces = (keyword: string) => {
+    console.log("SERARCH")
     var ps = new kakao.maps.services.Places(); // Create service 
     
     ps.keywordSearch(keyword, (data: Array<any>, status: any, pagination: any) => {
@@ -34,16 +34,17 @@ const PlaceAdder: React.FunctionComponent<Props> = ({places, setSelectInfo}) => 
             writer: cookies.name as string,
           } as Place// make into array 
         });
+        setIsSearching(false);
         if(_.length > 0) {
           setResults(_);
         }
         else {
           setResults("FAIL");
         }
-        setIsSearching(false);
       }
       else { // fail to search 
         setResults("FAIL");
+        setIsSearching(false);
       }
     });
   }
